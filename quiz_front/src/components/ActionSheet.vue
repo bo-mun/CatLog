@@ -6,7 +6,12 @@
 import { ref, onMounted, onBeforeUnmount, watch } from "vue"
 
 const props = defineProps({
-  src: { type: String, required: true },
+  // 라이선스 에셋이 없으면 null 이 들어온다. 그때는 도형으로 대신 그린다.
+  // (src/assets/enemies/README.md)
+  src: { type: String, default: null },
+
+  // 플레이스홀더 색을 정하는 키. 적 id 를 넘기면 적마다 다른 색이 된다.
+  placeholderKey: { type: String, default: "" },
 
   frameWidth: { type: Number, required: true },
   frameHeight: { type: Number, required: true },
@@ -96,9 +101,49 @@ function tick(t) {
   rafId = requestAnimationFrame(tick)
 }
 
+// 라이선스 에셋이 없을 때 대신 그리는 도형.
+// 프레임이 바뀌면 같이 움직여서 "애니메이션이 돌고 있다"는 게 보이게 한다.
+function drawPlaceholder(canvas) {
+  const ctx = canvas.getContext("2d")
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  // 키를 색상환 각도로 바꾼다. 같은 적은 항상 같은 색이 된다.
+  const key = props.placeholderKey || "?"
+  let hue = 0
+  for (let i = 0; i < key.length; i++) hue = (hue * 31 + key.charCodeAt(i)) % 360
+
+  const dw = props.frameWidth * props.scale
+  const dh = props.frameHeight * props.scale
+
+  // 몸통은 프레임 절반 크기로, 캔버스 아래쪽에 발을 붙인다.
+  const w = dw * 0.34
+  const h = dh * 0.42
+  const bob = Math.sin((localFrame / Math.max(1, props.frames)) * Math.PI * 2) * (dh * 0.02)
+  const x = (canvas.width - w) / 2 + props.offsetX
+  const y = (canvas.height - h) / 2 + props.offsetY + bob
+
+  ctx.fillStyle = `hsl(${hue} 45% 42%)`
+  ctx.fillRect(x, y, w, h)
+
+  // 위쪽에 밝은 띠 — 머리/몸 구분이 생겨 단순 사각형보다 캐릭터로 읽힌다.
+  ctx.fillStyle = `hsl(${hue} 45% 58%)`
+  ctx.fillRect(x, y, w, h * 0.28)
+
+  ctx.strokeStyle = `hsl(${hue} 30% 22%)`
+  ctx.lineWidth = 2
+  ctx.strokeRect(x, y, w, h)
+}
+
 function draw() {
   const canvas = canvasRef.value
-  if (!canvas || !img || !imgReady) return
+  if (!canvas) return
+
+  if (!props.src) {
+    drawPlaceholder(canvas)
+    return
+  }
+
+  if (!img || !imgReady) return
 
   const ctx = canvas.getContext("2d")
   ctx.imageSmoothingEnabled = false
@@ -151,7 +196,8 @@ async function loadImage(src) {
 
 onMounted(() => {
   setCanvasSizeIfNeeded()
-  loadImage(props.src)
+  if (props.src) loadImage(props.src)
+  else resetFrame(true)   // 에셋 없음 — 플레이스홀더로 바로 재생 시작
 })
 
 onBeforeUnmount(() => stop())
@@ -170,9 +216,15 @@ watch(
 watch(
   () => props.src,
   (src) => {
-    if (!src) return
     stop()
-    loadImage(src)
+    if (src) {
+      loadImage(src)
+      return
+    }
+    // 에셋 없는 적으로 교체된 경우 — 이전 이미지를 버리고 플레이스홀더로 전환한다.
+    img = null
+    imgReady = false
+    resetFrame(true)
   }
 )
 

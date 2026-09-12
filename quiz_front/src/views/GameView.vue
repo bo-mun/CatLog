@@ -157,6 +157,7 @@
   <div class="-translate-x-1/2 -translate-y-1/2">
     <ActionSheet
       :src="enemyDef.sheet"
+      :placeholderKey="enemyDef.id"
       :frameWidth="enemyDef.frameWidth"
       :frameHeight="enemyDef.frameHeight"
       :cols="enemyDef.cols"

@@ -56,6 +56,13 @@ cypress/videos/
 cypress/screenshots/
 __screenshots__/
 
+# --------------------------------------- 라이선스 에셋 (커밋 금지)
+# 재배포 금지 유료 에셋이라 공개 저장소에 올릴 수 없다.
+# 없으면 도형 플레이스홀더로 그려지고 앱은 정상 동작한다.
+#   → quiz_front/src/assets/enemies/README.md
+quiz_front/src/assets/enemies/*
+!quiz_front/src/assets/enemies/README.md
+
 # ------------------------------------------------ 개인 개발 문서 (로컬)
 docs/
 

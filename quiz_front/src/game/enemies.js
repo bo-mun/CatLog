@@ -1,20 +1,20 @@
-import slimeSheet from "@/assets/enemies/slime.png"
-import axemanSheet from "@/assets/enemies/armored_axeman.png"
-import armoredorcSheet from "@/assets/enemies/armored_orc.png"
-import armoredskeletonSheet from "@/assets/enemies/armored_skeleton.png"
-import eliteorcSheet from "@/assets/enemies/elite_orc.png"
-import swordskeletonSheet from "@/assets/enemies/greatsword_skeleton.png"
-import templerSheet from "@/assets/enemies/knight_templar.png"
-import knightSheet from "@/assets/enemies/knight.png"
-import lancerSheet from "@/assets/enemies/lancer.png"
-import orcriderSheet from "@/assets/enemies/orc_rider.png"
-import orcSheet from "@/assets/enemies/orc.png"
-import skeletonarcherSheet from "@/assets/enemies/skeleton_archer.png"
-import skeletonSheet from "@/assets/enemies/skeleton.png"
-import soldierSheet from "@/assets/enemies/soldier.png"
-import swordmanSheet from "@/assets/enemies/swordsman.png"
-import werebearSheet from "@/assets/enemies/werebear.png"
-import werewolfSheet from "@/assets/enemies/werewolf.png"
+// 적 스프라이트는 재배포 금지 라이선스 에셋이라 저장소에 커밋하지 않는다.
+// 그래서 이 디렉터리는 비어 있는 것이 기본 상태다 — 자세히는
+// src/assets/enemies/README.md
+//
+// import.meta.glob 은 Vite 가 빌드 시점에 경로 패턴과 맞는 모듈을 모아 주는 기능이다.
+// eager:true 면 동적 import 가 아니라 정적으로 인라인되므로 번들 결과는
+// 기존의 개별 import 와 같다. 차이는 '파일이 없을 때'다 —
+// 개별 import 는 빌드가 실패하지만 glob 은 빈 객체가 될 뿐이다.
+const SHEETS = import.meta.glob("@/assets/enemies/*.png", {
+  eager: true,
+  import: "default",
+})
+
+// glob 키는 "/src/assets/enemies/slime.png" 같은 전체 경로라 파일명으로 찾는다.
+// 없으면 null 을 반환하고, ActionSheet 가 도형 플레이스홀더로 대신 그린다.
+const sheetOf = (fileName) =>
+  Object.entries(SHEETS).find(([path]) => path.endsWith(`/${fileName}.png`))?.[1] ?? null
 
 
 // ✅ 적마다 애니메이션 맵이 다를 수 있으니 enemyAnims를 함께 둠
@@ -157,7 +157,7 @@ const WEREWOLF_ANIMS  = {
 export const ENEMIES = {
   slime: {
     id: "slime",
-    sheet: slimeSheet,
+    sheet: sheetOf("slime"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -170,7 +170,7 @@ export const ENEMIES = {
 
   axeman: {
     id: "axeman",
-    sheet: axemanSheet,
+    sheet: sheetOf("armored_axeman"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -183,7 +183,7 @@ export const ENEMIES = {
 
   armored_orc: {
     id: "armored_orc",
-    sheet: armoredorcSheet,
+    sheet: sheetOf("armored_orc"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -196,7 +196,7 @@ export const ENEMIES = {
 
   orc: {
     id: "orc",
-    sheet: orcSheet,
+    sheet: sheetOf("orc"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -209,7 +209,7 @@ export const ENEMIES = {
 
   elite_orc: {
     id: "elite_orc",
-    sheet: eliteorcSheet,
+    sheet: sheetOf("elite_orc"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -222,7 +222,7 @@ export const ENEMIES = {
 
   armored_skeleton: {
     id: "armored_skeleton",
-    sheet: armoredskeletonSheet,
+    sheet: sheetOf("armored_skeleton"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -235,7 +235,7 @@ export const ENEMIES = {
 
   skeleton: {
     id: "skeleton",
-    sheet: skeletonSheet,
+    sheet: sheetOf("skeleton"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -248,7 +248,7 @@ export const ENEMIES = {
 
   skeleton_archer: {
     id: "skeleton_archer",
-    sheet: skeletonarcherSheet,
+    sheet: sheetOf("skeleton_archer"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -261,7 +261,7 @@ export const ENEMIES = {
 
   greatsword_skeleton: {
     id: "greatsword_skeleton",
-    sheet: swordskeletonSheet,
+    sheet: sheetOf("greatsword_skeleton"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -274,7 +274,7 @@ export const ENEMIES = {
 
   knight_templer: {
     id: "knight_templer",
-    sheet: templerSheet,
+    sheet: sheetOf("knight_templar"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -287,7 +287,7 @@ export const ENEMIES = {
 
   knight: {
     id: "knight",
-    sheet: knightSheet,
+    sheet: sheetOf("knight"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -300,7 +300,7 @@ export const ENEMIES = {
 
   lancer: {
     id: "lancer",
-    sheet: lancerSheet,
+    sheet: sheetOf("lancer"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -313,7 +313,7 @@ export const ENEMIES = {
 
   orc_rider: {
     id: "orc_rider",
-    sheet: orcriderSheet,
+    sheet: sheetOf("orc_rider"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -326,7 +326,7 @@ export const ENEMIES = {
 
   swordman: {
     id: "swordman",
-    sheet: swordmanSheet,
+    sheet: sheetOf("swordsman"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -339,7 +339,7 @@ export const ENEMIES = {
 
   soldier: {
     id: "soldier",
-    sheet: soldierSheet,
+    sheet: sheetOf("soldier"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -353,7 +353,7 @@ export const ENEMIES = {
 
   werebear: {
     id: "werebear",
-    sheet: werebearSheet,
+    sheet: sheetOf("werebear"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
@@ -366,7 +366,7 @@ export const ENEMIES = {
 
   werewolf: {
     id: "werewolf",
-    sheet: werewolfSheet,
+    sheet: sheetOf("werewolf"),
     frameWidth: 100,
     frameHeight: 100,
     cols: 12,
